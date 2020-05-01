@@ -14,16 +14,23 @@ By default, this module will not create a resource group and the name of an exis
 
 ## Adding TAG's to your Azure resources
 
-Use tags to organize your Azure resources and management hierarchy. You apply tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name "Environment" and the value "Production" to all the resources in production. This is expected and must provide the following details as per your environment. There are no default values available for these arguments.
+Use tags to organize your Azure resources and management hierarchy. You can apply tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name "Environment" and the value "Production" to all the resources in production. You can manage these values variables directly or mapping as a variable using `variables.tf`.
 
-Here I have added the values directly. However, you can manage these as variables under `variables.tf` as well.  
+All network resources which support tagging can be tagged by specifying key-values in argument `tags`. Tag Name is added automatically on all resources. For example, you can specify `tags` like this as per environment:
 
 ```
-  application_name      = "TestApp1"
-  owner_email           = "user@example.com"
-  business_unit         = "publiccloud"
-  costcenter_id         = "5847596"
-  environment           = "development"
+module "storage" {
+  source        = "kumarvna/storage/azurerm"
+  version       = "1.0.0"
+
+  # ... omitted
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+    Owner       = "test-user"
+  }
+}  
 ```
 
 ## Module Usage
@@ -33,29 +40,31 @@ Here I have added the values directly. However, you can manage these as variable
 Following example to create a storage account with a few containers.
 
 ```
-module "storageacc" {
-  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
+module "storage" {
+  source                  = "kumarvna/storage/azurerm"
+  version                 = "1.0.0"
+
+  # Resource Group
   create_resource_group   = true
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"
   storage_account_name    = "storageaccwesteupore01"
 
-# Container lists wiht access_type to create
+  # Container lists wiht access_type to create
   containers_list = [
     { name        = "mystore250"
       access_type = "private"},
     { name        = "blobstore251"
       access_type = "blob"},
-    { name      = "containter252"
+    { name        = "containter252"
       access_type = "container"}
   ]
 
+  # Tags for Azure resources
   tags = {
-    application_name      = "demoapp01"
-    owner_email           = "user@example.com"
-    business_unit         = "publiccloud"
-    costcenter_id         = "5847596"
-    environment           = "development"
+    Terraform     = "true"
+    Environment   = "dev"
+    Owner         = "test-user"
   }
 }
 ```
@@ -65,8 +74,11 @@ module "storageacc" {
 Following example to create a storage account with few SMB files shares.
 
 ```
-module "storageacc" {
-  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
+module "storage" {
+  source                  = "kumarvna/storage/azurerm"
+  version                 = "1.0.0"
+
+  # Resource Group
   create_resource_group   = true
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"
@@ -76,16 +88,15 @@ module "storageacc" {
   file_shares = [
     { name  = "smbfileshare1"
       quota = 50 },
-    { name = "smbfileshare2"
+    { name  = "smbfileshare2"
       quota = 50 }
   ]
 
+# Tags for Azure resources
   tags = {
-    application_name      = "demoapp01"
-    owner_email           = "user@example.com"
-    business_unit         = "publiccloud"
-    costcenter_id         = "5847596"
-    environment           = "development"
+    Terraform     = "true"
+    Environment   = "dev"
+    Owner         = "test-user"
   }
 }
 ```
@@ -95,37 +106,39 @@ module "storageacc" {
 Following example to create a storage account with containers and and SMB file shares resources.
 
 ```
-module "storageacc" {
-  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
+module "storage" {
+  source                  = "kumarvna/storage/azurerm"
+  version                 = "1.0.0"
+
+  # Resource Group
   create_resource_group   = true
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"
   storage_account_name    = "storageaccwesteupore01"
 
-# Container lists wiht access_type to create
+  # Container lists wiht access_type to create
   containers_list = [
     { name        = "mystore250"
       access_type = "private"},
     { name        = "blobstore251"
       access_type = "blob"},
-    { name      = "containter252"
+    { name        = "containter252"
       access_type = "container"}
   ]
 
-# SMB file share with quota (GB) to create
+  # SMB file share with quota (GB) to create
   file_shares = [
-    { name  = "smbfileshare1"
-      quota = 50 },
-    { name = "smbfileshare2"
-      quota = 50 }
+        { name   = "smbfileshare1"
+        quota    = 50 },
+        { name   = "smbfileshare2"
+        quota    = 50 }
   ]
 
+  # Tags for Azure resources
   tags = {
-    application_name      = "demoapp01"
-    owner_email           = "user@example.com"
-    business_unit         = "publiccloud"
-    costcenter_id         = "5847596"
-    environment           = "development"
+    Terraform     = "true"
+    Environment   = "dev"
+    Owner         = "test-user"
   }
 }
 ```

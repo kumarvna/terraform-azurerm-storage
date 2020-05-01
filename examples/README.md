@@ -34,7 +34,7 @@ Following example to create a storage account with a few containers.
 
 ```
 module "storageacc" {
-  source                  = "github.com/tietoevry-infra-as-code/terraform-azurerm-storage?ref=v1.0.0"
+  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
   create_resource_group   = true
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"
@@ -66,7 +66,7 @@ Following example to create a storage account with few SMB files shares.
 
 ```
 module "storageacc" {
-  source                  = "github.com/tietoevry-infra-as-code/terraform-azurerm-storage?ref=v1.0.0"
+  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
   create_resource_group   = true
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"
@@ -96,7 +96,7 @@ Following example to create a storage account with containers and and SMB file s
 
 ```
 module "storageacc" {
-  source                  = "github.com/tietoevry-infra-as-code/terraform-azurerm-storage?ref=v1.0.0"
+  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
   create_resource_group   = true
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"

@@ -26,7 +26,7 @@ Following example to create a storage account with a few containers.
 
 ```
 module "storageacc" {
-  source                  = "github.com/tietoevry-infra-as-code/terraform-azurerm-storage?ref=v1.0.0"
+  source                  = "github.com/kumarvna/terraform-azurerm-storage?ref=v1.0.0"
   create_resource_group   = false
   resource_group_name     = "rg-demo-westeurope-01"
   location                = "westeurope"
@@ -140,7 +140,7 @@ Name | Description
 
 ## Authors
 
-Module is maintained by [Kumaraswamy Vithanala](mailto:kumaraswamy.vithanala@tieto.com) with the help from other awesome contributors.
+Module is maintained by [Kumaraswamy Vithanala](mailto:kumarvna@gmail.com) with the help from other awesome contributors.
 
 ## Other resources
 

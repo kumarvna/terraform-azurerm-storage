@@ -1,39 +1,46 @@
-# Azure Storage Account creation with additional Resources
+# Azure Storage Account with Containers
 
-Configuration in this directory creates a set of Azure storage resources. Few of these resources added/excluded as per your requirement.
+Simple configuration to create a Azure storage account with Containers.
 
 ## Module Usage
 
-## Storage account with Containers
-
-Following example to create a storage account with a few containers.
-
-```
+```hcl
 module "storage" {
-  source                  = "kumarvna/storage/azurerm"
-  version                 = "1.0.0"
+  source  = "kumarvna/storage/azurerm"
+  version = "2.0.0"
+  
+  # By default, this module will create a resource group, proivde the name here
+  # to use an existing resource group, specify the existing resource group name,
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
+  # RG name must follow Azure naming convention. ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
+  # Resource group is named like this: rg-tieto-internal-prod-westeurope-001
+  create_resource_group = false
+  resource_group_name   = "rg-demo-internal-shared-westeurope-002"
+  location              = "westeurope"
 
-  # Resource Group
-  create_resource_group   = true
-  resource_group_name     = "rg-demo-westeurope-01"
-  location                = "westeurope"
-  storage_account_name    = "storageaccwesteupore01"
+  # To enable advanced threat protection set argument to `true`
+  enable_advanced_threat_protection = true
 
-  # Container lists wiht access_type to create
+  # (Required) Project_Name, Subscription_type and environment are must to create resource names.
+  project_name      = "tieto-internal"
+  subscription_type = "shared"
+  environment       = "dev"
+
+  # Container lists with access_type to create
   containers_list = [
-    { name        = "mystore250"
-      access_type = "private"},
-    { name        = "blobstore251"
-      access_type = "blob"},
-    { name        = "containter252"
-      access_type = "container"}
+    { name = "mystore250", access_type = "private" },
+    { name = "blobstore251", access_type = "blob" },
+    { name = "containter252", access_type = "container" }
   ]
 
-  # Tags for Azure resources
+  # Adding TAG's to your Azure resources (Required)
+  # ProjectName and Env are already declared above, to use them here, create a varible.
   tags = {
-    Terraform     = "true"
-    Environment   = "dev"
-    Owner         = "test-user"
+    ProjectName  = "demo-internal"
+    Env          = "dev"
+    Owner        = "user@example.com"
+    BusinessUnit = "CORP"
+    ServiceClass = "Gold"
   }
 }
 ```
@@ -42,10 +49,10 @@ module "storage" {
 
 To run this example you need to execute following Terraform commands
 
-```
-$ terraform init
-$ terraform plan
-$ terraform apply
+```hcl
+terraform init
+terraform plan
+terraform apply
 ```
 
 Run `terraform destroy` when you don't need these resources.

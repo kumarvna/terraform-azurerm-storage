@@ -1,144 +1,152 @@
-# Azure Storage Account creation with additional Resources
+# Azure Storage Account Terraform Module
 
-Configuration in this directory creates a set of Azure storage resources. Few of these resources added/excluded as per your requirement.
-
-## Configure the Azure Provider
-
-Add AzureRM provider to start with the module configuration. Whilst the `version` attribute is optional, we recommend, not to pinning to a given version of the Provider.
-
-## Create resource group
-
-By default, this module will not create a resource group and the name of an existing resource group to be given in an argument `create_resource_group`. If you want to create a new resource group, set the argument `create_resource_group = true`.
-
-*If you are using an existing resource group, then this module uses the same resource group location to create all resources in this module.*
-
-## Tagging
-
-Use tags to organize your Azure resources and management hierarchy. You can apply tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name "Environment" and the value "Production" to all the resources in production. You can manage these values variables directly or mapping as a variable using `variables.tf`.
-
-All Azure resources which support tagging can be tagged by specifying key-values in argument `tags`. Tag Name is added automatically on all resources. For example, you can specify `tags` like this:
-
-```
-module "storage" {
-  source        = "kumarvna/storage/azurerm"
-  version       = "1.0.0"
-
-  # ... omitted
-
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-    Owner       = "test-user"
-  }
-}  
-```
+Terraform Module to create an Azure storage account with a set of containers (and access level), set of file shares (and quota), tables, queues, Network policies and Blob lifecycle management.
 
 ## Module Usage
 
-## Storage account with Containers
+### Storage account with Containers
 
-Following example to create a storage account with a few containers.
-
-```
+```hcl
 module "storage" {
-  source                  = "kumarvna/storage/azurerm"
-  version                 = "1.0.0"
+  source  = "kumarvna/storage/azurerm"
+  version = "2.0.0"
 
-  # Resource Group
-  create_resource_group   = true
-  resource_group_name     = "rg-demo-westeurope-01"
-  location                = "westeurope"
-  storage_account_name    = "storageaccwesteupore01"
+  # By default, this module will create a resource group, proivde the name here
+  # to use an existing resource group, specify the existing resource group name,
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
+  # RG name must follow Azure naming convention. ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
+  # Resource group is named like this: rg-tieto-internal-prod-westeurope-001
+  create_resource_group = false
+  resource_group_name   = "rg-demo-internal-shared-westeurope-002"
+  location              = "westeurope"
+  storage_account_name  = "mydefaultstorage"
 
-  # Container lists wiht access_type to create
+  # To enable advanced threat protection set argument to `true`
+  enable_advanced_threat_protection = true
+
+  # Container lists with access_type to create
   containers_list = [
-    { name        = "mystore250"
-      access_type = "private"},
-    { name        = "blobstore251"
-      access_type = "blob"},
-    { name        = "containter252"
-      access_type = "container"}
+    { name = "mystore250", access_type = "private" },
+    { name = "blobstore251", access_type = "blob" },
+    { name = "containter252", access_type = "container" }
   ]
-
-  # Tags for Azure resources
+  # Adding TAG's to your Azure resources (Required)
+  # ProjectName and Env are already declared above, to use them here, create a varible.
   tags = {
-    Terraform     = "true"
-    Environment   = "dev"
-    Owner         = "test-user"
+    ProjectName  = "demo-internal"
+    Env          = "dev"
+    Owner        = "user@example.com"
+    BusinessUnit = "CORP"
+    ServiceClass = "Gold"
   }
 }
-```
-
-## SMB File Shares
-
-Following example to create a storage account with few SMB files shares.
 
 ```
+
+### Storage account with SMB File Shares
+
+```hcl
 module "storage" {
-  source                  = "kumarvna/storage/azurerm"
-  version                 = "1.0.0"
+  source  = "kumarvna/storage/azurerm"
+  version = "2.0.0"
 
-  # Resource Group
-  create_resource_group   = true
-  resource_group_name     = "rg-demo-westeurope-01"
-  location                = "westeurope"
-  storage_account_name    = "storageaccwesteupore01"
+  # By default, this module will create a resource group, proivde the name here
+  # to use an existing resource group, specify the existing resource group name,
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
+  # RG name must follow Azure naming convention. ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
+  # Resource group is named like this: rg-tieto-internal-prod-westeurope-001
+  create_resource_group = false
+  resource_group_name   = "rg-demo-internal-shared-westeurope-002"
+  location              = "westeurope"
+  storage_account_name  = "mydefaultstorage"
 
-# SMB file share with quota (GB) to create
+  # To enable advanced threat protection set argument to `true`
+  enable_advanced_threat_protection = true
+
+  # SMB file share with quota (GB) to create
   file_shares = [
-    { name  = "smbfileshare1"
-      quota = 50 },
-    { name  = "smbfileshare2"
-      quota = 50 }
+    { name = "smbfileshare1", quota = 50 },
+    { name = "smbfileshare2", quota = 50 }
   ]
 
-# Tags for Azure resources
+  # Adding TAG's to your Azure resources (Required)
+  # ProjectName and Env are already declared above, to use them here, create a varible.
   tags = {
-    Terraform     = "true"
-    Environment   = "dev"
-    Owner         = "test-user"
+    ProjectName  = "demo-internal"
+    Env          = "dev"
+    Owner        = "user@example.com"
+    BusinessUnit = "CORP"
+    ServiceClass = "Gold"
   }
 }
 ```
 
-## Storage Account with all additional features
+### Storage Account with all additional features
 
-Following example to create a storage account with containers and and SMB file shares resources.
-
-```
+```hcl
 module "storage" {
-  source                  = "kumarvna/storage/azurerm"
-  version                 = "1.0.0"
+  source  = "kumarvna/storage/azurerm"
+  version = "2.0.0"
 
-  # Resource Group
-  create_resource_group   = true
-  resource_group_name     = "rg-demo-westeurope-01"
-  location                = "westeurope"
-  storage_account_name    = "storageaccwesteupore01"
+  # By default, this module will create a resource group, proivde the name here
+  # to use an existing resource group, specify the existing resource group name,
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
+  # RG name must follow Azure naming convention. ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
+  # Resource group is named like this: rg-tieto-internal-prod-westeurope-001
+  create_resource_group = false
+  resource_group_name   = "rg-demo-internal-shared-westeurope-002"
+  location              = "westeurope"
+  storage_account_name  = "mydefaultstorage"
 
-  # Container lists wiht access_type to create
+  # To enable advanced threat protection set argument to `true`
+  enable_advanced_threat_protection = true
+
+  # Container lists with access_type to create
   containers_list = [
-    { name        = "mystore250"
-      access_type = "private"},
-    { name        = "blobstore251"
-      access_type = "blob"},
-    { name        = "containter252"
-      access_type = "container"}
+    { name = "mystore250", access_type = "private" },
+    { name = "blobstore251", access_type = "blob" },
+    { name = "containter252", access_type = "container" }
   ]
 
   # SMB file share with quota (GB) to create
   file_shares = [
-        { name   = "smbfileshare1"
-        quota    = 50 },
-        { name   = "smbfileshare2"
-        quota    = 50 }
+    { name = "smbfileshare1", quota = 50 },
+    { name = "smbfileshare2", quota = 50 }
   ]
 
-  # Tags for Azure resources
+  # Storage tables
+  tables = ["table1", "table2", "table3"]
+
+  # Storage queues
+  queues = ["queue1", "queue2"]
+
+  # Lifecycle management for storage account.
+  # Must specify the value to each argument and default is `0`
+  lifecycles = [
+    {
+      prefix_match               = ["mystore250/folder_path"]
+      tier_to_cool_after_days    = 0
+      tier_to_archive_after_days = 50
+      delete_after_days          = 100
+      snapshot_delete_after_days = 30
+    },
+    {
+      prefix_match               = ["blobstore251/another_path"]
+      tier_to_cool_after_days    = 0
+      tier_to_archive_after_days = 30
+      delete_after_days          = 75
+      snapshot_delete_after_days = 30
+    }
+  ]
+
+  # Adding TAG's to your Azure resources (Required)
+  # ProjectName and Env are already declared above, to use them here, create a varible.
   tags = {
-    Terraform     = "true"
-    Environment   = "dev"
-    Owner         = "test-user"
+    ProjectName  = "demo-internal"
+    Env          = "dev"
+    Owner        = "user@example.com"
+    BusinessUnit = "CORP"
+    ServiceClass = "Gold"
   }
 }
 ```
@@ -147,10 +155,10 @@ module "storage" {
 
 To run this example you need to execute following Terraform commands
 
-```
-$ terraform init
-$ terraform plan
-$ terraform apply
+```hcl
+terraform init
+terraform plan
+terraform apply
 ```
 
 Run `terraform destroy` when you don't need these resources.
@@ -159,12 +167,18 @@ Run `terraform destroy` when you don't need these resources.
 
 Name | Description
 ---- | -----------
-`resource_group_name` | The name of the resource group in which resources are created
-`resource_group_id` | The id of the resource group in which resources are created
-`resource_group_location`| The location of the resource group in which resources are created
-`storage_account_id` | The ID of the storage account
-`sorage_account_name`| The name of the storage account
+`resource_group_name`|The name of the resource group in which resources are created
+`resource_group_id`|The id of the resource group in which resources are created
+`resource_group_location`|The location of the resource group in which resources are created
+`storage_account_id`|The ID of the storage account
+`sorage_account_name`|The name of the storage account
+`storage_account_primary_location`|The primary location of the storage account
+`storage_account_primary_web_endpoint`|The endpoint URL for web storage in the primary location
+`storage_account_primary_web_host`|The hostname with port if applicable for web storage in the primary location
 `storage_primary_connection_string`|The primary connection string for the storage account
 `storage_primary_access_key`|The primary access key for the storage account
-`containers` | The list of containers
-`file_shares` | The list of SMB file shares
+`storage_secondary_access_key`|The secondary access key for the storage account
+`containers`|The list of containers
+`file_shares`|The list of SMB file shares
+`tables`|The list of storage tables
+`queues`|The list of storage queues

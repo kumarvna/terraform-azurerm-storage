@@ -14,9 +14,6 @@ module "storage" {
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
-  # RG name must follow Azure naming convention.
-  # For ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
-  # Resource group is named like this: rg-demo-internal-prod-westeurope-001
   resource_group_name  = "rg-demo-internal-shared-westeurope-002"
   location             = "westeurope"
   storage_account_name = "mydefaultstorage"
@@ -52,9 +49,6 @@ module "storage" {
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
-  # RG name must follow Azure naming convention.
-  # For ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
-  # Resource group is named like this: rg-demo-internal-prod-westeurope-001
   resource_group_name  = "rg-demo-internal-shared-westeurope-002"
   location             = "westeurope"
   storage_account_name = "mydefaultstorage"
@@ -90,9 +84,6 @@ module "storage" {
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
-  # RG name must follow Azure naming convention.
-  # For ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
-  # Resource group is named like this: rg-demo-internal-prod-westeurope-001
   resource_group_name  = "rg-demo-internal-shared-westeurope-002"
   location             = "westeurope"
   storage_account_name = "mydefaultstorage"

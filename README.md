@@ -27,9 +27,6 @@ module "storage" {
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
-  # RG name must follow Azure naming convention.
-  # For ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
-  # Resource group is named like this: rg-demo-internal-prod-westeurope-001
   resource_group_name  = "rg-demo-internal-shared-westeurope-002"
   location             = "westeurope"
   storage_account_name = "mydefaultstorage"
@@ -55,25 +52,6 @@ module "storage" {
 
   # Storage queues
   queues = ["queue1", "queue2"]
-
-  # Lifecycle management for storage account.
-  # Must specify the value to each argument and default is `0`
-  lifecycles = [
-    {
-      prefix_match               = ["mystore250/folder_path"]
-      tier_to_cool_after_days    = 0
-      tier_to_archive_after_days = 50
-      delete_after_days          = 100
-      snapshot_delete_after_days = 30
-    },
-    {
-      prefix_match               = ["blobstore251/another_path"]
-      tier_to_cool_after_days    = 0
-      tier_to_archive_after_days = 30
-      delete_after_days          = 75
-      snapshot_delete_after_days = 30
-    }
-  ]
 
   # Adding TAG's to your Azure resources (Required)
   # ProjectName and Env are already declared above, to use them here, create a varible.

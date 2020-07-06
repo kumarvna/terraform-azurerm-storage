@@ -10,7 +10,8 @@ module "storage" {
   # By default, this module will create a resource group, proivde the name here
   # to use an existing resource group, specify the existing resource group name,
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
-  # RG name must follow Azure naming convention. ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
+  # RG name must follow Azure naming convention.
+  # For ex.: rg-<App or project name>-<Subscription type>-<Region>-<###>
   # Resource group is named like this: rg-tieto-internal-prod-westeurope-001
   create_resource_group = false
   resource_group_name   = "rg-demo-internal-shared-westeurope-002"

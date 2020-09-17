@@ -234,7 +234,6 @@ module "key-vault" {
 | Name | Version |
 |------|---------|
 | azurerm | ~> 2.27 |
-| null | n/a |
 | random | n/a |
 
 ## Inputs

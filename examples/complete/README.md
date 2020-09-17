@@ -5,7 +5,7 @@ This example is to create a storage account with containers, SMB file shares, ta
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.0.0"
+  version = "2.1.0"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,

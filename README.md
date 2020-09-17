@@ -22,7 +22,7 @@ These types of resources are supported:
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.0.0"
+  version = "2.1.0"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
@@ -114,7 +114,7 @@ The default action set to `Allow` when no network rules matched. A `subnet_ids` 
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.0.0"
+  version = "2.1.0"
 
   # .... omitted
 
@@ -147,7 +147,7 @@ This module supports the implementation of storage lifecycle management. If spec
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.0.0"
+  version = "2.1.0"
 
   # .... omitted
 
@@ -208,7 +208,7 @@ End Date of the Project|Date when this application, workload, or service is plan
 ```hcl
 module "key-vault" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.0.0"
+  version = "2.1.0"
 
   # ... omitted
 
@@ -221,6 +221,21 @@ module "key-vault" {
   }
 }  
 ```
+
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.13 |
+| azurerm | ~> 2.27 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| azurerm | ~> 2.27 |
+| null | n/a |
+| random | n/a |
 
 ## Inputs
 

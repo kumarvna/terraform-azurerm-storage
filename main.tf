@@ -41,6 +41,7 @@ resource "azurerm_storage_account" "storeacc" {
   account_tier              = local.account_tier
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
+  allow_blob_public_access  = var.enable_advanced_threat_protection == true ? true : false
   tags                      = merge({ "ResourceName" = format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result) }, var.tags, )
 
   identity {

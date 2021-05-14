@@ -5,9 +5,10 @@ module "storage" {
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name, 
   # and set the argument to `create_resource_group = false`. Location will be same as existing RG. 
-  resource_group_name  = "rg-demo-internal-shared-westeurope-002"
-  location             = "westeurope"
-  storage_account_name = "mydefaultstorage"
+  create_resource_group = true
+  resource_group_name   = "rg-demo-internal-shared-westeurope-002"
+  location              = "westeurope"
+  storage_account_name  = "mydefaultstorage"
 
   # To enable advanced threat protection set argument to `true`
   enable_advanced_threat_protection = true

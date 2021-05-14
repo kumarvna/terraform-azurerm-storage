@@ -33,6 +33,11 @@ variable "access_tier" {
   default     = "Hot"
 }
 
+variable "min_tls_version" {
+  description = "The minimum supported TLS version for the storage account"
+  default     = "TLS1_2"
+}
+
 variable "assign_identity" {
   description = "Set to `true` to enable system-assigned managed identity, or `false` to disable it."
   default     = true

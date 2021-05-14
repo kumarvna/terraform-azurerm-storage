@@ -22,7 +22,7 @@ These types of resources are supported:
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.1.0"
+  version = "2.2.0"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
@@ -114,7 +114,7 @@ The default action set to `Allow` when no network rules matched. A `subnet_ids` 
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.1.0"
+  version = "2.2.0"
 
   # .... omitted
 
@@ -147,7 +147,7 @@ This module supports the implementation of storage lifecycle management. If spec
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.1.0"
+  version = "2.2.0"
 
   # .... omitted
 
@@ -208,7 +208,7 @@ End Date of the Project|Date when this application, workload, or service is plan
 ```hcl
 module "key-vault" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.1.0"
+  version = "2.2.0"
 
   # ... omitted
 
@@ -227,13 +227,13 @@ module "key-vault" {
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13 |
-| azurerm | ~> 2.27 |
+| azurerm | >= 2.59.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2.27 |
+| azurerm | >= 2.59 |
 | random | n/a |
 
 ## Inputs
@@ -246,6 +246,7 @@ Name | Description | Type | Default
 `account_kind`|General-purpose v2 accounts: Basic storage account type for blobs, files, queues, and tables.|string|`"StorageV2"`
 `skuname`|The SKUs supported by Microsoft Azure Storage. Valid options are Premium_LRS, Premium_ZRS, Standard_GRS, Standard_GZRS, Standard_LRS, Standard_RAGRS, Standard_RAGZRS, Standard_ZRS|string|`Standard_RAGRS`
 `access_tier`|Defines the access tier for BlobStorage and StorageV2 accounts. Valid options are Hot and Cool.|string|`"Hot"`
+`min_tls_version`|The minimum supported TLS version for the storage account. Possible values are `TLS1_0`, `TLS1_1`, and `TLS1_2` |string|`"TLS1_2"`
 `assign_identity`|Set to `true` to enable system-assigned managed identity, or `false` to disable it.|string|`true`
 `soft_delete_retention`|Number of retention days for soft delete. If set to null it will disable soft delete all together.|number|`30`
 `enable_advanced_threat_protection`|Controls Advance threat protection plan for Storage account!string|`false`

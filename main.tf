@@ -34,7 +34,7 @@ resource "random_string" "unique" {
 }
 
 resource "azurerm_storage_account" "storeacc" {
-  name                      = format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result)
+  name                      = substr("format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result)", 0, 24)
   resource_group_name       = local.resource_group_name
   location                  = local.location
   account_kind              = var.account_kind

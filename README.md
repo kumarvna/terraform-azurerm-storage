@@ -20,6 +20,11 @@ These types of resources are supported:
 ## Module Usage
 
 ```hcl
+# Azure Provider configuration
+provider "azurerm" {
+  features {}
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.2.0"

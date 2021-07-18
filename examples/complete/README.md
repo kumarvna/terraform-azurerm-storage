@@ -3,6 +3,11 @@
 This example is to create a storage account with containers, SMB file shares, tables, queues, lifecycle management and other additional features.
 
 ```hcl
+# Azure Provider configuration
+provider "azurerm" {
+  features {}
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.2.0"

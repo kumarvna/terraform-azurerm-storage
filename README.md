@@ -28,7 +28,7 @@ provider "azurerm" {
 
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.2.0"
+  version = "2.3.0"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
@@ -120,7 +120,7 @@ The default action set to `Allow` when no network rules matched. A `subnet_ids` 
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.2.0"
+  version = "2.3.0"
 
   # .... omitted
 
@@ -153,7 +153,7 @@ This module supports the implementation of storage lifecycle management. If spec
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.2.0"
+  version = "2.3.0"
 
   # .... omitted
 

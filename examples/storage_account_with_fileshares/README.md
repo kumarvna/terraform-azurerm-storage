@@ -5,6 +5,11 @@ Simple configuration to create a Azure storage account with SMB file shares.
 ## Module Usage
 
 ```hcl
+# Azure Provider configuration
+provider "azurerm" {
+  features {}
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.1.0"

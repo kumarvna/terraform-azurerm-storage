@@ -7,6 +7,11 @@ Terraform Module to create an Azure storage account with a set of containers (an
 ### Storage account with Containers
 
 ```hcl
+# Azure Provider configuration
+provider "azurerm" {
+  features {}
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.2.0"
@@ -42,6 +47,11 @@ module "storage" {
 ### Storage account with SMB File Shares
 
 ```hcl
+# Azure Provider configuration
+provider "azurerm" {
+  features {}
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.2.0"
@@ -77,6 +87,11 @@ module "storage" {
 ### Storage Account with all additional features
 
 ```hcl
+# Azure Provider configuration
+provider "azurerm" {
+  features {}
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.2.0"

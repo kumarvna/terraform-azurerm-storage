@@ -28,7 +28,7 @@ provider "azurerm" {
 
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.3.0"
+  version = "2.4.0"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
@@ -106,7 +106,7 @@ Azure Files offers fully managed file shares in the cloud that are accessible vi
 
 This module creates the SMB file shares based on your input within an Azure Storage Account.  Configure the `quota` for this file share as per your preference. The maximum size of the share, in gigabytes. For Standard storage accounts, this must be greater than `0` and less than `5120` GB (5 TB). For Premium FileStorage storage accounts, this must be greater than `100` GB and less than `102400` GB (100 TB).
 
-## Soft delete for Blob storage
+## Soft delete for Blobs or Containers
 
 Soft delete protects blob data from being accidentally or erroneously modified or deleted. When soft delete is enabled for a storage account, containers, blobs, blob versions, and snapshots in that storage account may be recovered after they are deleted, within a retention period that you specify.
 
@@ -126,7 +126,7 @@ The default action set to `Allow` when no network rules matched. A `subnet_ids` 
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.3.0"
+  version = "2.4.0"
 
   # .... omitted
 
@@ -159,7 +159,7 @@ This module supports the implementation of storage lifecycle management. If spec
 ```hcl
 module "storage" {
   source  = "kumarvna/storage/azurerm"
-  version = "2.3.0"
+  version = "2.4.0"
 
   # .... omitted
 

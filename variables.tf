@@ -38,14 +38,29 @@ variable "min_tls_version" {
   default     = "TLS1_2"
 }
 
-variable "assign_identity" {
-  description = "Set to `true` to enable system-assigned managed identity, or `false` to disable it."
-  default     = true
+variable "blob_soft_delete_retention_days" {
+  description = "Specifies the number of days that the blob should be retained, between `1` and `365` days. Defaults to `7`"
+  default     = 7
 }
 
-variable "soft_delete_retention" {
-  description = "Number of retention days for soft delete. If set to null it will disable soft delete all together."
-  default     = 30
+variable "container_soft_delete_retention_days" {
+  description = "Specifies the number of days that the blob should be retained, between `1` and `365` days. Defaults to `7`"
+  default     = 7
+}
+
+variable "enable_versioning" {
+  description = "Is versioning enabled? Default to `false`"
+  default     = false
+}
+
+variable "last_access_time_enabled" {
+  description = "Is the last access time based tracking enabled? Default to `false`"
+  default     = false
+}
+
+variable "change_feed_enabled" {
+  description = "Is the blob service properties for change feed events enabled?"
+  default     = false
 }
 
 variable "enable_advanced_threat_protection" {
@@ -86,6 +101,11 @@ variable "lifecycles" {
   description = "Configure Azure Storage firewalls and virtual networks"
   type        = list(object({ prefix_match = set(string), tier_to_cool_after_days = number, tier_to_archive_after_days = number, delete_after_days = number, snapshot_delete_after_days = number }))
   default     = []
+}
+
+variable "identity_ids" {
+  description = "Specifies a list of user managed identity ids to be assigned. This is required when `type` is set to `UserAssigned` or `SystemAssigned, UserAssigned`"
+  default     = null
 }
 
 variable "tags" {

@@ -4,10 +4,10 @@ Terraform Module to create an Azure storage account with a set of containers (an
 
 To defines the kind of account, set the argument to `account_kind = "StorageV2"`. Account kind defaults to `StorageV2`. If you want to change this value to other storage accounts kind, then this module automatically computes the appropriate values for `account_tier`, `account_replication_type`. The valid options are `BlobStorage`, `BlockBlobStorage`, `FileStorage`, `Storage` and `StorageV2`. `static_website` can only be set when the account_kind is set to `StorageV2`.
 
-> **[NOTE]**
+> **[!NOTE]**
 > **This module now supports the meta arguments including `providers`, `depends_on`, `count`, and `for_each`.**
 
-## resources are supported:
+## resources are supported
 
 * [Storage Account](https://www.terraform.io/docs/providers/azurerm/r/storage_account.html)
 * [Storage Advanced Threat Protection](https://www.terraform.io/docs/providers/azurerm/r/advanced_threat_protection.html)
@@ -75,7 +75,8 @@ module "storage" {
 
 By default, this module will not create a resource group and the name of an existing resource group to be given in an argument `resource_group_name`. If you want to create a new resource group, set the argument `create_resource_group = true`.
 
-*If you are using an existing resource group, then this module uses the same resource group location to create all resources in this module.*
+> [!NOTE]
+> *If you are using an existing resource group, then this module uses the same resource group location to create all resources in this module.*
 
 ## BlockBlobStorage accounts
 
@@ -107,9 +108,14 @@ This module creates the SMB file shares based on your input within an Azure Stor
 
 ## Soft delete for Blob storage
 
-Soft delete protects blob data from being accidentally or erroneously modified or deleted. When soft delete is enabled for a storage account, blobs, blob versions (preview), and snapshots in that storage account may be recovered after they are deleted, within a retention period that you specify.
+Soft delete protects blob data from being accidentally or erroneously modified or deleted. When soft delete is enabled for a storage account, containers, blobs, blob versions, and snapshots in that storage account may be recovered after they are deleted, within a retention period that you specify.
 
-This module allows you to specify the number of days that the blob should be retained period using `soft_delete_retention` argument between 1 and 365 days.
+This module allows you to specify the number of days that the blob or container should be retained period using `blob_soft_delete_retention_days` and `container_soft_delete_retention_days` arguments between 1 and 365 days. Default is `7` days.
+
+> [!WARNING]
+> Container soft delete can restore only whole containers and their contents at the time of deletion. You cannot restore a deleted blob within a container by using container soft delete. Microsoft recommends also enabling blob soft delete and blob versioning to protect individual blobs in a container.
+>
+> When you restore a container, you must restore it to its original name. If the original name has been used to create a new container, then you will not be able to restore the soft-deleted container.
 
 ## Configure Azure Storage firewalls and virtual networks
 
@@ -185,8 +191,8 @@ module "storage" {
 Applying tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name `Environment` and the value `Production` to all the resources in production.
 For recommendations on how to implement a tagging strategy, see Resource naming and tagging decision guide.
 
->**Important** :
-Tag names are case-insensitive for operations. A tag with a tag name, regardless of the casing, is updated or retrieved. However, the resource provider might keep the casing you provide for the tag name. You'll see that casing in cost reports. **Tag values are case-sensitive.**
+> [!IMPORTANT]
+> Tag names are case-insensitive for operations. A tag with a tag name, regardless of the casing, is updated or retrieved. However, the resource provider might keep the casing you provide for the tag name. You'll see that casing in cost reports. **Tag values are case-sensitive.**
 
 An effective naming convention assembles resource names by using important resource information as parts of a resource's name. For example, using these [recommended naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging#example-names), a public IP resource for a production SharePoint workload is named like this: `pip-sharepoint-prod-westus-001`.
 
@@ -215,8 +221,11 @@ Name | Description | Type | Default
 `skuname`|The SKUs supported by Microsoft Azure Storage. Valid options are Premium_LRS, Premium_ZRS, Standard_GRS, Standard_GZRS, Standard_LRS, Standard_RAGRS, Standard_RAGZRS, Standard_ZRS|string|`Standard_RAGRS`
 `access_tier`|Defines the access tier for BlobStorage and StorageV2 accounts. Valid options are Hot and Cool.|string|`"Hot"`
 `min_tls_version`|The minimum supported TLS version for the storage account. Possible values are `TLS1_0`, `TLS1_1`, and `TLS1_2` |string|`"TLS1_2"`
-`assign_identity`|Set to `true` to enable system-assigned managed identity, or `false` to disable it.|string|`true`
-`soft_delete_retention`|Number of retention days for soft delete. If set to null it will disable soft delete all together.|number|`30`
+`blob_soft_delete_retention_days`|Specifies the number of days that the blob should be retained, between `1` and `365` days.|number|`7`
+`container_soft_delete_retention_days`|Specifies the number of days that the blob should be retained, between `1` and `365` days.|number|`7`
+`enable_versioning`|Is versioning enabled?|string|`false`
+`last_access_time_enabled`|Is the last access time based tracking enabled?|string|`false`
+`change_feed_enabled`|Is the blob service properties for change feed events enabled?|string|`false`
 `enable_advanced_threat_protection`|Controls Advance threat protection plan for Storage account!string|`false`
 `network_rules`|Configure Azure storage firewalls and virtual networks|list|`null`
 `containers_list`| List of container|list|`[]`

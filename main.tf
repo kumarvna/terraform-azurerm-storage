@@ -45,13 +45,20 @@ resource "azurerm_storage_account" "storeacc" {
   tags                      = merge({ "ResourceName" = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24) }, var.tags, )
 
   identity {
-    type = var.assign_identity ? "SystemAssigned" : null
+    type         = var.identity_ids != null ? "SystemAssigned, UserAssigned" : "SystemAssigned"
+    identity_ids = var.identity_ids
   }
 
   blob_properties {
     delete_retention_policy {
-      days = var.soft_delete_retention
+      days = var.blob_soft_delete_retention_days
     }
+    container_delete_retention_policy {
+      days = var.container_soft_delete_retention_days
+    }
+    versioning_enabled = var.enable_versioning
+    last_access_time_enabled = var.last_access_time_enabled
+    change_feed_enabled = var.change_feed_enabled
   }
 
   dynamic "network_rules" {

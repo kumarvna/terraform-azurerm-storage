@@ -56,9 +56,9 @@ resource "azurerm_storage_account" "storeacc" {
     container_delete_retention_policy {
       days = var.container_soft_delete_retention_days
     }
-    versioning_enabled = var.enable_versioning
+    versioning_enabled       = var.enable_versioning
     last_access_time_enabled = var.last_access_time_enabled
-    change_feed_enabled = var.change_feed_enabled
+    change_feed_enabled      = var.change_feed_enabled
   }
 
   dynamic "network_rules" {
@@ -84,7 +84,7 @@ resource "azurerm_advanced_threat_protection" "atp" {
 # Storage Container Creation
 #-------------------------------
 resource "azurerm_storage_container" "container" {
-  count                 = length(var.containers_list)
+  for_each              = { for x in var.containers_list : x.name => x }
   name                  = var.containers_list[count.index].name
   storage_account_name  = azurerm_storage_account.storeacc.name
   container_access_type = var.containers_list[count.index].access_type
@@ -94,7 +94,7 @@ resource "azurerm_storage_container" "container" {
 # Storage Fileshare Creation
 #-------------------------------
 resource "azurerm_storage_share" "fileshare" {
-  count                = length(var.file_shares)
+  for_each             = { for x in var.file_shares : x.name => x }
   name                 = var.file_shares[count.index].name
   storage_account_name = azurerm_storage_account.storeacc.name
   quota                = var.file_shares[count.index].quota
@@ -104,7 +104,7 @@ resource "azurerm_storage_share" "fileshare" {
 # Storage Tables Creation
 #-------------------------------
 resource "azurerm_storage_table" "tables" {
-  count                = length(var.tables)
+  for_each             = toset(var.tables)
   name                 = var.tables[count.index]
   storage_account_name = azurerm_storage_account.storeacc.name
 }
@@ -113,7 +113,7 @@ resource "azurerm_storage_table" "tables" {
 # Storage Queue Creation
 #-------------------------------
 resource "azurerm_storage_queue" "queues" {
-  count                = length(var.queues)
+  for_each             = toset(var.queues)
   name                 = var.queues[count.index]
   storage_account_name = azurerm_storage_account.storeacc.name
 }

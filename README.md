@@ -10,7 +10,6 @@ To defines the kind of account, set the argument to `account_kind = "StorageV2"`
 ## resources are supported
 
 * [Storage Account](https://www.terraform.io/docs/providers/azurerm/r/storage_account.html)
-* [Storage Advanced Threat Protection](https://www.terraform.io/docs/providers/azurerm/r/advanced_threat_protection.html)
 * [Containers](https://www.terraform.io/docs/providers/azurerm/r/storage_container.html)
 * [SMB File Shares](https://www.terraform.io/docs/providers/azurerm/r/storage_share.html)
 * [Storage Table](https://www.terraform.io/docs/providers/azurerm/r/storage_table.html)
@@ -37,8 +36,8 @@ module "storage" {
   location             = "westeurope"
   storage_account_name = "mydefaultstorage"
 
-  # To enable advanced threat protection set argument to `true`
-  enable_advanced_threat_protection = true
+  # To enable public blob access set argument to `true`
+  enable_blob_public_access = true
 
   # Container lists with access_type to create
   containers_list = [
@@ -226,7 +225,7 @@ Name | Description | Type | Default
 `enable_versioning`|Is versioning enabled?|string|`false`
 `last_access_time_enabled`|Is the last access time based tracking enabled?|string|`false`
 `change_feed_enabled`|Is the blob service properties for change feed events enabled?|string|`false`
-`enable_advanced_threat_protection`|Controls Advance threat protection plan for Storage account!string|`false`
+`enable_blob_public_access`|Allow or disallow public access to all blobs or containers in the storage account.|string|`false`
 `network_rules`|Configure Azure storage firewalls and virtual networks|list|`null`
 `containers_list`| List of container|list|`[]`
 `file_shares`|List of SMB file shares|list|`[]`

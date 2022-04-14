@@ -15,8 +15,8 @@ module "storage" {
   location              = "westeurope"
   storage_account_name  = "mystorage"
 
-  # To enable advanced threat protection set argument to `true`
-  enable_advanced_threat_protection = true
+  # To enable public blob access set argument to `true`
+  enable_blob_public_access = true
 
   # Container lists with access_type to create
   containers_list = [

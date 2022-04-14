@@ -33,7 +33,9 @@ resource "random_string" "unique" {
 }
 
 resource "azurerm_storage_account" "storeacc" {
-  name                      = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24)
+  #name                      = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24)
+  name                      = var.storage_account_name
+  access_tier               = var.access_tier
   resource_group_name       = local.resource_group_name
   location                  = local.location
   account_kind              = var.account_kind
@@ -41,8 +43,8 @@ resource "azurerm_storage_account" "storeacc" {
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
   min_tls_version           = var.min_tls_version
-  allow_blob_public_access  = var.enable_advanced_threat_protection == true ? true : false
-  tags                      = merge({ "ResourceName" = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24) }, var.tags, )
+  allow_blob_public_access  = var.enable_blob_public_access
+  tags                      = var.tags
 
   identity {
     type         = var.identity_ids != null ? "SystemAssigned, UserAssigned" : "SystemAssigned"
@@ -50,12 +52,20 @@ resource "azurerm_storage_account" "storeacc" {
   }
 
   blob_properties {
-    delete_retention_policy {
-      days = var.blob_soft_delete_retention_days
+    dynamic "delete_retention_policy" {
+      for_each = var.enable_blob_soft_delete ? [1] : []
+      content {
+        days = var.blob_soft_delete_retention_days
+      }
     }
-    container_delete_retention_policy {
-      days = var.container_soft_delete_retention_days
+
+    dynamic "container_delete_retention_policy" {
+      for_each = var.enable_container_soft_delete ? [1] : []
+      content {
+        days = var.container_soft_delete_retention_days
+      }
     }
+
     versioning_enabled = var.enable_versioning
     last_access_time_enabled = var.last_access_time_enabled
     change_feed_enabled = var.change_feed_enabled
@@ -70,14 +80,6 @@ resource "azurerm_storage_account" "storeacc" {
       virtual_network_subnet_ids = var.network_rules.subnet_ids
     }
   }
-}
-
-#--------------------------------------
-# Storage Advanced Threat Protection 
-#--------------------------------------
-resource "azurerm_advanced_threat_protection" "atp" {
-  target_resource_id = azurerm_storage_account.storeacc.id
-  enabled            = var.enable_advanced_threat_protection
 }
 
 #-------------------------------

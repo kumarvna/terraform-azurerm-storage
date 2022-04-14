@@ -63,8 +63,9 @@ variable "change_feed_enabled" {
   default     = false
 }
 
-variable "enable_advanced_threat_protection" {
-  description = "Boolean flag which controls if advanced threat protection is enabled."
+variable "enable_blob_public_access" {
+  description = "Allow or disallow public access to all blobs or containers in the storage account."
+  type        = bool
   default     = false
 }
 
@@ -112,4 +113,16 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
+}
+
+variable "enable_container_soft_delete" {
+  description = "Whether container soft deletion is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "enable_blob_soft_delete" {
+  description = "Whether blob soft deletion is enabled."
+  type        = bool
+  default     = true
 }

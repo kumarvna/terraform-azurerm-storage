@@ -277,6 +277,7 @@ Name | Description
 `storage_account_id`|The ID of the storage account
 `sorage_account_name`|The name of the storage account
 `storage_account_primary_location`|The primary location of the storage account
+`storage_account_primary_blob_endpoint`|The endpoint URL for blob storage in the primary location
 `storage_account_primary_web_endpoint`|The endpoint URL for web storage in the primary location
 `storage_account_primary_web_host`|The hostname with port if applicable for web storage in the primary location
 `storage_primary_connection_string`|The primary connection string for the storage account

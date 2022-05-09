@@ -55,9 +55,9 @@ resource "azurerm_storage_account" "storeacc" {
     container_delete_retention_policy {
       days = var.container_soft_delete_retention_days
     }
-    versioning_enabled = var.enable_versioning
+    versioning_enabled       = var.enable_versioning
     last_access_time_enabled = var.last_access_time_enabled
-    change_feed_enabled = var.change_feed_enabled
+    change_feed_enabled      = var.change_feed_enabled
   }
 
   dynamic "network_rules" {

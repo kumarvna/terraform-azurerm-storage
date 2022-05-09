@@ -28,6 +28,11 @@ output "storage_account_primary_location" {
   value       = module.storage.storage_account_primary_location
 }
 
+output "storage_account_primary_blob_endpoint" {
+  description = "The endpoint URL for blob storage in the primary location."
+  value       = module.storage.storage_account_primary_blob_endpoint
+}
+
 output "storage_account_primary_web_endpoint" {
   description = "The endpoint URL for web storage in the primary location."
   value       = module.storage.storage_account_primary_web_endpoint

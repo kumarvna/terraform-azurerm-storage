@@ -268,15 +268,15 @@ An effective naming convention assembles resource names by using important resou
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13 |
-| azurerm | >= 2.59.0 |
+| terraform | >= 1.1.0 |
+| azurerm | >= 3.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | >= 2.59 |
-| random | n/a |
+| azurerm | >= 3.1.0 |
+| random | >= 3.1.0 |
 
 ## Inputs
 

@@ -41,7 +41,6 @@ resource "azurerm_storage_account" "storeacc" {
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
   min_tls_version           = var.min_tls_version
-  allow_blob_public_access  = var.enable_advanced_threat_protection == true ? true : false
   tags                      = merge({ "ResourceName" = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24) }, var.tags, )
 
   identity {
@@ -56,9 +55,9 @@ resource "azurerm_storage_account" "storeacc" {
     container_delete_retention_policy {
       days = var.container_soft_delete_retention_days
     }
-    versioning_enabled = var.enable_versioning
+    versioning_enabled       = var.enable_versioning
     last_access_time_enabled = var.last_access_time_enabled
-    change_feed_enabled = var.change_feed_enabled
+    change_feed_enabled      = var.change_feed_enabled
   }
 
   dynamic "network_rules" {

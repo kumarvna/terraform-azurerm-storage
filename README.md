@@ -186,6 +186,41 @@ module "storage" {
   }
   ```
 
+## `Identity` - Configure managed identities to access Azure Storage
+
+Managed identities for Azure resources provides Azure services with an automatically managed identity in Azure Active Directory. You can use this identity to authenticate to any service that supports Azure AD authentication, without having credentials in your code.
+
+There are two types of managed identities:
+
+* **System-assigned**: When enabled a system-assigned managed identity an identity is created in Azure AD that is tied to the lifecycle of that service instance. when the resource is deleted, Azure automatically deletes the identity. By design, only that Azure resource can use this identity to request tokens from Azure AD.
+* **User-assigned**: A managed identity as a standalone Azure resource. For User-assigned managed identities, the identity is managed separately from the resources that use it.
+
+Regardless of the type of identity chosen a managed identity is a service principal of a special type that may only be used with Azure resources. When the managed identity is deleted, the corresponding service principal is automatically removed.
+
+```terraform
+resource "azurerm_user_assigned_identity" "example" {
+  for_each            = toset(["user-identity1", "user-identity2"])
+  resource_group_name = "rg-demo-internal-shared-westeurope-002"
+  location            = "westeurope"
+  name                = each.key
+}
+
+module "storage" {
+  source  = "kumarvna/storage/azurerm"
+  version = "2.5.0"
+
+  # .... omitted
+
+  # Configure managed identities to access Azure Storage (Optional)
+  # Possible types are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned`.
+  managed_identity_type = "UserAssigned"
+  managed_identity_ids  = [for k in azurerm_user_assigned_identity.example : k.id]
+
+# .... omitted for bravity
+
+}
+```
+
 ## Recommended naming and tagging conventions
 
 Applying tags to your Azure resources, resource groups, and subscriptions to logically organize them into a taxonomy. Each tag consists of a name and a value pair. For example, you can apply the name `Environment` and the value `Production` to all the resources in production.
@@ -227,6 +262,8 @@ Name | Description | Type | Default
 `last_access_time_enabled`|Is the last access time based tracking enabled?|string|`false`
 `change_feed_enabled`|Is the blob service properties for change feed events enabled?|string|`false`
 `enable_advanced_threat_protection`|Controls Advance threat protection plan for Storage account!string|`false`
+`managed_identity_type`|The type of Managed Identity which should be assigned to the Azure Storage. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned`|string|`null`
+`managed_identity_ids`|A list of User Managed Identity ID's which should be assigned to the Azure Storage.|string|`null`
 `network_rules`|Configure Azure storage firewalls and virtual networks|list|`null`
 `containers_list`| List of container|list|`[]`
 `file_shares`|List of SMB file shares|list|`[]`

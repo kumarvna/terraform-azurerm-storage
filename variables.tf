@@ -117,11 +117,18 @@ variable "lifecycles" {
   default     = []
 }
 
-variable "identity_ids" {
-  description = "Specifies a list of user managed identity ids to be assigned. This is required when `type` is set to `UserAssigned` or `SystemAssigned, UserAssigned`"
+variable "managed_identity_type" {
+  description = "The type of Managed Identity which should be assigned to the Linux Virtual Machine. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned`"
+  default     = null
+  type        = string
+}
+
+variable "managed_identity_ids" {
+  description = "A list of User Managed Identity ID's which should be assigned to the Linux Virtual Machine."
   default     = null
   type        = list(string)
 }
+
 
 variable "tags" {
   description = "A map of tags to add to all resources"

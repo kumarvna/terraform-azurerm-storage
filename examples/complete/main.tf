@@ -3,6 +3,13 @@ provider "azurerm" {
   features {}
 }
 
+resource "azurerm_user_assigned_identity" "example" {
+  for_each            = toset(["user-identity1", "user-identity2"])
+  resource_group_name = "rg-shared-westeurope-01"
+  location            = "westeurope"
+  name                = each.key
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.5.0"
@@ -36,6 +43,11 @@ module "storage" {
 
   # Storage queues
   queues = ["queue1", "queue2"]
+
+  # Configure managed identities to access Azure Storage (Optional)
+  # Possible types are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned`.
+  managed_identity_type = "UserAssigned"
+  managed_identity_ids  = [for k in azurerm_user_assigned_identity.example : k.id]
 
   # Lifecycle management for storage account.
   # Must specify the value to each argument and default is `0` 

@@ -92,16 +92,24 @@ provider "azurerm" {
   features {}
 }
 
+resource "azurerm_user_assigned_identity" "example" {
+  for_each            = toset(["user-identity1", "user-identity2"])
+  resource_group_name = "rg-shared-westeurope-01"
+  location            = "westeurope"
+  name                = each.key
+}
+
 module "storage" {
   source  = "kumarvna/storage/azurerm"
   version = "2.5.0"
 
   # By default, this module will not create a resource group
-  # proivde a name to use an existing resource group, specify the existing resource group name,
-  # and set the argument to `create_resource_group = false`. Location will be same as existing RG.
-  resource_group_name  = "rg-demo-internal-shared-westeurope-002"
-  location             = "westeurope"
-  storage_account_name = "mydefaultstorage"
+  # proivde a name to use an existing resource group, specify the existing resource group name, 
+  # and set the argument to `create_resource_group = false`. Location will be same as existing RG. 
+  create_resource_group = true
+  resource_group_name   = "rg-demo-internal-shared-westeurope-002"
+  location              = "westeurope"
+  storage_account_name  = "mystorage"
 
   # To enable advanced threat protection set argument to `true`
   enable_advanced_threat_protection = true
@@ -125,8 +133,13 @@ module "storage" {
   # Storage queues
   queues = ["queue1", "queue2"]
 
+  # Configure managed identities to access Azure Storage (Optional)
+  # Possible types are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned`.
+  managed_identity_type = "UserAssigned"
+  managed_identity_ids  = [for k in azurerm_user_assigned_identity.example : k.id]
+
   # Lifecycle management for storage account.
-  # Must specify the value to each argument and default is `0`
+  # Must specify the value to each argument and default is `0` 
   lifecycles = [
     {
       prefix_match               = ["mystore250/folder_path"]
@@ -145,7 +158,7 @@ module "storage" {
   ]
 
   # Adding TAG's to your Azure resources (Required)
-  # ProjectName and Env are already declared above, to use them here, create a varible.
+  # ProjectName and Env are already declared above, to use them here, create a varible. 
   tags = {
     ProjectName  = "demo-internal"
     Env          = "dev"

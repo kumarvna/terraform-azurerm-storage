@@ -264,99 +264,91 @@ For recommendations on how to implement a tagging strategy, see Resource naming 
 
 An effective naming convention assembles resource names by using important resource information as parts of a resource's name. For example, using these [recommended naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging#example-names), a public IP resource for a production SharePoint workload is named like this: `pip-sharepoint-prod-westus-001`.
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.1.0 |
-| azurerm | >= 3.1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.1.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | >= 3.1.0 |
-| random | >= 3.1.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.1.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_advanced_threat_protection.atp](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/advanced_threat_protection) | resource |
+| [azurerm_resource_group.rg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_storage_account.storeacc](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) | resource |
+| [azurerm_storage_container.container](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container) | resource |
+| [azurerm_storage_management_policy.lcpolicy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_management_policy) | resource |
+| [azurerm_storage_queue.queues](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_queue) | resource |
+| [azurerm_storage_share.fileshare](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_share) | resource |
+| [azurerm_storage_table.tables](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_table) | resource |
+| [random_string.unique](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [azurerm_resource_group.rgrp](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 
 ## Inputs
 
-Name | Description | Type | Default
----- | ----------- | ---- | -------
-`create_resource_group`|Whether to create resource group and use it for all networking resources|string| `false`
-`resource_group_name`|The name of the resource group in which resources are created|string|`""`
-`location`|The location of the resource group in which resources are created|string| `""`
-`account_kind`|General-purpose v2 accounts: Basic storage account type for blobs, files, queues, and tables.|string|`"StorageV2"`
-`skuname`|The SKUs supported by Microsoft Azure Storage. Valid options are Premium_LRS, Premium_ZRS, Standard_GRS, Standard_GZRS, Standard_LRS, Standard_RAGRS, Standard_RAGZRS, Standard_ZRS|string|`Standard_RAGRS`
-`access_tier`|Defines the access tier for BlobStorage and StorageV2 accounts. Valid options are Hot and Cool.|string|`"Hot"`
-`min_tls_version`|The minimum supported TLS version for the storage account. Possible values are `TLS1_0`, `TLS1_1`, and `TLS1_2` |string|`"TLS1_2"`
-`blob_soft_delete_retention_days`|Specifies the number of days that the blob should be retained, between `1` and `365` days.|number|`7`
-`container_soft_delete_retention_days`|Specifies the number of days that the blob should be retained, between `1` and `365` days.|number|`7`
-`enable_versioning`|Is versioning enabled?|string|`false`
-`last_access_time_enabled`|Is the last access time based tracking enabled?|string|`false`
-`change_feed_enabled`|Is the blob service properties for change feed events enabled?|string|`false`
-`enable_advanced_threat_protection`|Controls Advance threat protection plan for Storage account!string|`false`
-`managed_identity_type`|The type of Managed Identity which should be assigned to the Azure Storage. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned`|string|`null`
-`managed_identity_ids`|A list of User Managed Identity ID's which should be assigned to the Azure Storage.|string|`null`
-`network_rules`|Configure Azure storage firewalls and virtual networks|list|`null`
-`containers_list`| List of container|list|`[]`
-`file_shares`|List of SMB file shares|list|`[]`
-`queues`|List of storages queues|list|`[]`
-`tables`|List of storage tables|list|`[]`
-`lifecycles`|Configure Azure Storage firewalls and virtual networks|list|`{}`
-`Tags`|A map of tags to add to all resources|map|`{}`
-
-### `Container` objects (must have keys)
-
-Name | Description | Type | Default
----- | ----------- | ---- | -------
-`name` | Name of the container | string | `""`
-`access_type` | The Access Level configured for the Container. Possible values are `blob`, `container` or `private`.|string|`"private"`
-
-### `SMB file Shares` objects (must have keys)
-
-Name | Description | Type | Default
----- | ----------- | ---- | -------
-`name` | Name of the SMB file share | string | `""`
-`quota` | The required size in GB. Defaults to `5120`|string|`""`
-
-### `network_rules` objects (must have keys)
-
-Name | Description | Type | Default
----- | ----------- | ---- | -------
-`bypass`|Specifies whether traffic is bypassed for Logging/Metrics/AzureServices. Valid options are any combination of `Logging`, `Metrics`, `AzureServices`, or `None`.|string |`"AzureServices"`
-`ip_rules`|List of public IP or IP ranges in CIDR Format. Only IPV4 addresses are allowed. Private IP address ranges are not allowed.|list(string)|`[]`
-subnet_ids|A list of resource ids for subnets.|list(string)|`[]`
-
-### `lifecycles` objects (must have keys)
-
-Name | Description | Type | Default
----- | ----------- | ---- | -------
-`prefix_match`|An array of strings for prefixes to be matched|set(string)|`[]`
-`tier_to_cool_after_days`|The age in days after last modification to tier blobs to cool storage. Supports blob currently at `Hot` tier. Must be at least `0`.|number|`0`
-`tier_to_archive_after_days`|The age in days after last modification to tier blobs to archive storage. Supports blob currently at `Hot` or `Cool` tier. Must be at least `0`.|number|`0`
-`delete_after_days`|The age in days after last modification to delete the blob. Must be at least 0.|number|`0`
-`snapshot_delete_after_days`|The age in days after create to delete the snapshot. Must be at least 0.|number|`0`
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_access_tier"></a> [access\_tier](#input\_access\_tier) | Defines the access tier for BlobStorage and StorageV2 accounts. Valid options are Hot and Cool. | `string` | `"Hot"` | no |
+| <a name="input_account_kind"></a> [account\_kind](#input\_account\_kind) | The type of storage account. Valid options are BlobStorage, BlockBlobStorage, FileStorage, Storage and StorageV2. | `string` | `"StorageV2"` | no |
+| <a name="input_blob_soft_delete_retention_days"></a> [blob\_soft\_delete\_retention\_days](#input\_blob\_soft\_delete\_retention\_days) | Specifies the number of days that the blob should be retained, between `1` and `365` days. Defaults to `7` | `number` | `7` | no |
+| <a name="input_change_feed_enabled"></a> [change\_feed\_enabled](#input\_change\_feed\_enabled) | Is the blob service properties for change feed events enabled? | `bool` | `false` | no |
+| <a name="input_container_soft_delete_retention_days"></a> [container\_soft\_delete\_retention\_days](#input\_container\_soft\_delete\_retention\_days) | Specifies the number of days that the blob should be retained, between `1` and `365` days. Defaults to `7` | `number` | `7` | no |
+| <a name="input_containers_list"></a> [containers\_list](#input\_containers\_list) | List of containers to create and their access levels. | `list(object({ name = string, access_type = string }))` | `[]` | no |
+| <a name="input_create_resource_group"></a> [create\_resource\_group](#input\_create\_resource\_group) | Whether to create resource group and use it for all networking resources | `bool` | `false` | no |
+| <a name="input_enable_advanced_threat_protection"></a> [enable\_advanced\_threat\_protection](#input\_enable\_advanced\_threat\_protection) | Boolean flag which controls if advanced threat protection is enabled. | `bool` | `false` | no |
+| <a name="input_enable_versioning"></a> [enable\_versioning](#input\_enable\_versioning) | Is versioning enabled? Default to `false` | `bool` | `false` | no |
+| <a name="input_file_shares"></a> [file\_shares](#input\_file\_shares) | List of containers to create and their access levels. | `list(object({ name = string, quota = number }))` | `[]` | no |
+| <a name="input_last_access_time_enabled"></a> [last\_access\_time\_enabled](#input\_last\_access\_time\_enabled) | Is the last access time based tracking enabled? Default to `false` | `bool` | `false` | no |
+| <a name="input_lifecycles"></a> [lifecycles](#input\_lifecycles) | Configure Azure Storage firewalls and virtual networks | `list(object({ prefix_match = set(string), tier_to_cool_after_days = number, tier_to_archive_after_days = number, delete_after_days = number, snapshot_delete_after_days = number }))` | `[]` | no |
+| <a name="input_location"></a> [location](#input\_location) | The location/region to keep all your network resources. To get the list of all locations with table format from azure cli, run 'az account list-locations -o table' | `string` | `"westeurope"` | no |
+| <a name="input_managed_identity_ids"></a> [managed\_identity\_ids](#input\_managed\_identity\_ids) | A list of User Managed Identity ID's which should be assigned to the Linux Virtual Machine. | `list(string)` | `null` | no |
+| <a name="input_managed_identity_type"></a> [managed\_identity\_type](#input\_managed\_identity\_type) | The type of Managed Identity which should be assigned to the Linux Virtual Machine. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned` | `string` | `null` | no |
+| <a name="input_min_tls_version"></a> [min\_tls\_version](#input\_min\_tls\_version) | The minimum supported TLS version for the storage account | `string` | `"TLS1_2"` | no |
+| <a name="input_network_rules"></a> [network\_rules](#input\_network\_rules) | Network rules restricing access to the storage account. | `object({ bypass = list(string), ip_rules = list(string), subnet_ids = list(string) })` | `null` | no |
+| <a name="input_queues"></a> [queues](#input\_queues) | List of storages queues | `list(string)` | `[]` | no |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | A container that holds related resources for an Azure solution | `string` | `"rg-demo-westeurope-01"` | no |
+| <a name="input_skuname"></a> [skuname](#input\_skuname) | The SKUs supported by Microsoft Azure Storage. Valid options are Premium\_LRS, Premium\_ZRS, Standard\_GRS, Standard\_GZRS, Standard\_LRS, Standard\_RAGRS, Standard\_RAGZRS, Standard\_ZRS | `string` | `"Standard_RAGRS"` | no |
+| <a name="input_storage_account_name"></a> [storage\_account\_name](#input\_storage\_account\_name) | The base name of the azure storage account. This module adds a prefix and a random suffix to the name | `string` | `""` | no |
+| <a name="input_storage_account_name_raw"></a> [storage\_account\_name\_raw](#input\_storage\_account\_name\_raw) | The name of the azure storage account. If this value exists, storage\_account\_name is ignored. | `string` | `null` | no |
+| <a name="input_tables"></a> [tables](#input\_tables) | List of storage tables. | `list(string)` | `[]` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 
 ## Outputs
 
-Name | Description
----- | -----------
-`resource_group_name`|The name of the resource group in which resources are created
-`resource_group_id`|The id of the resource group in which resources are created
-`resource_group_location`|The location of the resource group in which resources are created
-`storage_account_id`|The ID of the storage account
-`sorage_account_name`|The name of the storage account
-`storage_account_primary_location`|The primary location of the storage account
-`storage_account_primary_blob_endpoint`|The endpoint URL for blob storage in the primary location
-`storage_account_primary_web_endpoint`|The endpoint URL for web storage in the primary location
-`storage_account_primary_web_host`|The hostname with port if applicable for web storage in the primary location
-`storage_primary_connection_string`|The primary connection string for the storage account
-`storage_primary_access_key`|The primary access key for the storage account
-`storage_secondary_access_key`|The secondary access key for the storage account
-`containers`|The list of containers
-`file_shares`|The list of SMB file shares
-`tables`|The list of storage tables
-`queues`|The list of storage queues
+| Name | Description |
+|------|-------------|
+| <a name="output_containers"></a> [containers](#output\_containers) | Map of containers. |
+| <a name="output_file_shares"></a> [file\_shares](#output\_file\_shares) | Map of Storage SMB file shares. |
+| <a name="output_queues"></a> [queues](#output\_queues) | Map of Storage SMB file shares. |
+| <a name="output_resource_group_id"></a> [resource\_group\_id](#output\_resource\_group\_id) | The id of the resource group in which resources are created |
+| <a name="output_resource_group_location"></a> [resource\_group\_location](#output\_resource\_group\_location) | The location of the resource group in which resources are created |
+| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | The name of the resource group in which resources are created |
+| <a name="output_storage_account_id"></a> [storage\_account\_id](#output\_storage\_account\_id) | The ID of the storage account. |
+| <a name="output_storage_account_name"></a> [storage\_account\_name](#output\_storage\_account\_name) | The name of the storage account. |
+| <a name="output_storage_account_primary_blob_endpoint"></a> [storage\_account\_primary\_blob\_endpoint](#output\_storage\_account\_primary\_blob\_endpoint) | The endpoint URL for blob storage in the primary location. |
+| <a name="output_storage_account_primary_location"></a> [storage\_account\_primary\_location](#output\_storage\_account\_primary\_location) | The primary location of the storage account |
+| <a name="output_storage_account_primary_web_endpoint"></a> [storage\_account\_primary\_web\_endpoint](#output\_storage\_account\_primary\_web\_endpoint) | The endpoint URL for web storage in the primary location. |
+| <a name="output_storage_account_primary_web_host"></a> [storage\_account\_primary\_web\_host](#output\_storage\_account\_primary\_web\_host) | The hostname with port if applicable for web storage in the primary location. |
+| <a name="output_storage_primary_access_key"></a> [storage\_primary\_access\_key](#output\_storage\_primary\_access\_key) | The primary access key for the storage account |
+| <a name="output_storage_primary_connection_string"></a> [storage\_primary\_connection\_string](#output\_storage\_primary\_connection\_string) | The primary connection string for the storage account |
+| <a name="output_storage_secondary_access_key"></a> [storage\_secondary\_access\_key](#output\_storage\_secondary\_access\_key) | The primary access key for the storage account. |
+| <a name="output_tables"></a> [tables](#output\_tables) | Map of Storage SMB file shares. |
+<!-- END_TF_DOCS -->
 
 ## Resource Graph
 

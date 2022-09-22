@@ -6,6 +6,7 @@ locals {
   account_replication_type = (local.account_tier == "Premium" ? "LRS" : split("_", var.skuname)[1])
   resource_group_name      = element(coalescelist(data.azurerm_resource_group.rgrp.*.name, azurerm_resource_group.rg.*.name, [""]), 0)
   location                 = element(coalescelist(data.azurerm_resource_group.rgrp.*.location, azurerm_resource_group.rg.*.location, [""]), 0)
+  staname                  = var.storage_account_name_raw != null ? var.storage_account_name_raw : substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24)
 }
 
 #---------------------------------------------------------
@@ -33,7 +34,7 @@ resource "random_string" "unique" {
 }
 
 resource "azurerm_storage_account" "storeacc" {
-  name                      = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24)
+  name                      = local.staname
   resource_group_name       = local.resource_group_name
   location                  = local.location
   account_kind              = var.account_kind
@@ -41,7 +42,7 @@ resource "azurerm_storage_account" "storeacc" {
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
   min_tls_version           = var.min_tls_version
-  tags                      = merge({ "ResourceName" = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24) }, var.tags, )
+  tags                      = merge({ "ResourceName" = local.staname }, var.tags, )
 
   dynamic "identity" {
     for_each = var.managed_identity_type != null ? [1] : []

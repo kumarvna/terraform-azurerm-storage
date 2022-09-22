@@ -17,8 +17,14 @@ variable "location" {
 }
 
 variable "storage_account_name" {
-  description = "The name of the azure storage account"
+  description = "The base name of the azure storage account. This module adds a prefix and a random suffix to the name"
   default     = ""
+  type        = string
+}
+
+variable "storage_account_name_raw" {
+  description = "The name of the azure storage account. If this value exists, storage_account_name is ignored."
+  default     = null
   type        = string
 }
 

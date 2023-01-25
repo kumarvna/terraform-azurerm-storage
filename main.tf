@@ -78,6 +78,7 @@ resource "azurerm_storage_account" "storeacc" {
 # Storage Advanced Threat Protection 
 #--------------------------------------
 resource "azurerm_advanced_threat_protection" "atp" {
+  count              = var.enable_advanced_threat_protection ? 1 : 0
   target_resource_id = azurerm_storage_account.storeacc.id
   enabled            = var.enable_advanced_threat_protection
 }

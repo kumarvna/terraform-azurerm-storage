@@ -40,6 +40,12 @@ variable "is_hns_enabled" {
   description = "Is Hierarchical Namespace enabled? This can be used with Azure Data Lake Storage Gen 2"
 }
 
+variable "sftp_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable SFTP for the storage account"
+}
+
 variable "access_tier" {
   description = "Defines the access tier for BlobStorage and StorageV2 accounts. Valid options are Hot and Cool."
   default     = "Hot"

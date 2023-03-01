@@ -40,6 +40,8 @@ resource "azurerm_storage_account" "storeacc" {
   account_tier              = local.account_tier
   account_replication_type  = local.account_replication_type
   enable_https_traffic_only = true
+  is_hns_enabled            = var.is_hns_enabled || var.sftp_enabled
+  sftp_enabled              = var.sftp_enabled
   min_tls_version           = var.min_tls_version
   tags                      = merge({ "ResourceName" = substr(format("sta%s%s", lower(replace(var.storage_account_name, "/[[:^alnum:]]/", "")), random_string.unique.result), 0, 24) }, var.tags, )
 

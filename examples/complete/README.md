@@ -9,8 +9,8 @@ provider "azurerm" {
 }
 
 module "storage" {
-  source  = "kumarvna/storage/azurerm"
-  version = "2.4.0"
+  source  = "github.com/Xat59/terraform-azurerm-storage-account"
+  version = "3.0.1"
 
   # By default, this module will not create a resource group
   # proivde a name to use an existing resource group, specify the existing resource group name,
